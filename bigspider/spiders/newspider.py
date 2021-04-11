@@ -1,15 +1,25 @@
 import scrapy
+import pandas as pd
 
-sites = ['mirror.xyz', 
-         'jessicadw.com/',
-         'tinybuddha.com/',
-         'geohot.com/']
 
 class MySpider(scrapy.Spider):
     name = 'newspider'
-    allowed_domains = sites
-    start_urls = ['https://jessicadw.com/blog/find-your-passion',
-                  'https://tinybuddha.com/blog/try-this-if-youre-struggling-to-find-your-passion/',]
+    allowed_domains = ['lifehack.org']
+    start_urls = ['https://www.lifehack.org/articles/featured/how-to-find-your-passion.html']
 
     def parse(self, response):
-        print(response.css('script::text').get())
+       # classes = response.css('div::attr(class)').getall()
+        data = pd.read_csv('../easylist.txt', error_bad_lines=False)
+        for row in data.iterrows():
+            print('g' +'"'+str(row)+'"'+'+')
+            classes = response.xpath('//div[contains(@class, '+'"'+str(row)+'"'+')]/@class').getall()
+            print(classes)
+            if not classes:
+                print("NO ADS BABY")
+            else:
+                print("there are ads")
+
+
+
+
+
